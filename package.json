@@ -1,0 +1,26 @@
+{
+  "devDependencies": {
+    "concurrently": "^8.1.0",
+    "dotenv-cli": "latest",
+    "turbo": "^1.8.3"
+  },
+  "scripts": {
+    "dev": " dotenv -- turbo run dev",
+    "build": "turbo run build",
+    "start": "concurrently \"node apps/api/dist/main\" \"node apps/bot/dist/main\""
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "dotenv-cli": "^7.1.0",
+    "polotno": "^1.12.3"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}

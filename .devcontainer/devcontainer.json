@@ -1,0 +1,37 @@
+{
+    "name": "Node.js & TypeScript",
+    // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:0-18",
+    "features": {
+        "ghcr.io/devcontainers-contrib/features/nestjs-cli:1": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "rangav.vscode-thunder-client",
+                "christian-kohler.npm-intellisense",
+                "PKief.material-icon-theme",
+                "christian-kohler.path-intellisense",
+                "mgmcdermott.vscode-language-babel",
+                "ms-azuretools.vscode-docker"
+            ]
+        }
+    },
+    "forwardPorts": [
+        3000
+    ],
+    // "settings": {
+    // 	"terminal.integrated.shell.linux": "/bin/bash"
+    //   },
+    // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+    // "remoteUser": "root",
+    "mounts": [
+        "source=node-api-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+    ],
+    // Use 'postCreateCommand' to run commands after the container is created.
+    // "postCreateCommand": "yarn install",
+    "postCreateCommand": "npm install"
+    // Configure tool-specific properties.
+    // "customizations": {},
+}

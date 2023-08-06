@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300&display=swap');
+@import url('https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons.css');
+@import url('https://unpkg.com/@blueprintjs/core@4/lib/css/blueprint.css');
+@import url('https://unpkg.com/@blueprintjs/popover2@1/lib/css/blueprint-popover2.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Fira Code", monospace;
+}
+.min_full_screen {
+  min-height: calc(100vh - 80px);
+}
+nav a.active{
+  background: #24B299;
+}
+nav a:hover{
+  color: #fff;
+  text-decoration: none;
+}
+a:hover{
+  color: #fff!important;
+  text-decoration: none!important;
+}
+/* .editpanel a.active{
+  background: #090B28;
+} */
+.profileModal label {
+  color:#fff!important;
+}
+.profileModal label::before {
+  content: url(./assets/upload-icon-white.png);
+  display: flex;
+  margin-left: 40px;
+  width: 30px;
+  height:30px;
+}
+/* Editor Page Stylings */
+.bp4-dark{
+  background-color: #090B28!important;
+}
+.go810943435{
+  background-color: #090B28!important;
+}
+.polotno-workspace-inner button{
+  background-color: #24B299;
+  font-weight: 500;
+  color:#fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.polotno-workspace-inner p{
+  font-weight: 600;
+  font-size: 20px;
+  color:#fff;
+}
+.polotno-side-tabs-container{
+  position: sticky!important;
+  top:0px!important
+}
+.bp4-navbar p{
+  display: none;
+}
+.bp4-navbar a{
+  color: #fff!important
+}
+.polotno-side-panel-tab{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.polotno-workspace-container{
+  background-color: #090B28!important;
+}

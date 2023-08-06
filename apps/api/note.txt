@@ -1,0 +1,287 @@
+//  @Post()
+//   @UseInterceptors(FileInterceptor('file'))
+//   async uploadFile(@UploadedFile() file, @Req() req): Promise<ResponseType> {
+//     try {
+//       const user_id = req.user.user_id;
+//       const gameTitle = req.body.name;
+//       const gameName = gameTitle || 'astray-5';
+
+//       // const imagePath = join(
+//       //   process.cwd(),
+//       //   'public',
+//       //   'upload',
+//       //   'img',
+//       //   `${uuidv4()}-${file.originalname}`,
+//       // );
+//       // fs.writeFile(imagePath, file.buffer);
+//       // await this.generateService.upload(imagePath);
+
+//       // const formData = new FormData();
+//       // formData.append('image', file.buffer, { filename: file.originalname });
+//       // const { data } = await this.httpService
+//       //   .post(`${process.env.IMG_PROCESS_API}`, formData, {
+//       //     headers: {
+//       //       ...formData.getHeaders(),
+//       //       'Content-Length': formData.getLengthSync(),
+//       //     },
+//       //   })
+//       //   .toPromise();
+//       // console.log(data);
+
+//       // const { game_name, game_assets } = data.game_data_assets;
+
+//       // const resData = {
+//       //   game_data_assets: {
+//       //     game_name: 'astray',
+//       //     game_assets: [
+//       //       {
+//       //         image_name: 'ball.png',
+//       //         image_file:
+//       //           'https://firebasestorage.googleapis.com/v0/b/laail-bot.appspot.com/o/ball.png?alt=media&token=b40b4434-fde5-441d-9cce-73f1d8c154d3',
+//       //       },
+//       //       {
+//       //         image_name: 'concrete.png',
+//       //         image_file:
+//       //           'https://firebasestorage.googleapis.com/v0/b/laail-bot.appspot.com/o/concrete.png?alt=media&token=412e20a1-1e5f-437f-934e-945c6d030da8',
+//       //       },
+//       //       {
+//       //         image_name: 'brick.png',
+//       //         image_file:
+//       //           'https://firebasestorage.googleapis.com/v0/b/laail-bot.appspot.com/o/brick.png?alt=media&token=66aac8c8-031a-4368-8cdd-8493e3e91769',
+//       //       },
+//       //     ],
+//       //   },
+//       // };
+
+//       // const { game_name, game_assets } = resData.game_data_assets;
+//       // const gameUrl = `template/${uuidv4()}`;
+//       // const gameSource = join(__dirname, '../..', 'public', game_name);
+//       // const destination = join(__dirname, '../..', 'public', gameUrl);
+//       // await fs.copy(gameSource, destination);
+
+//       // game_assets.forEach(async (assets) => {
+//       //   const { data } = await this.httpService
+//       //     .get(assets.image_file, { responseType: 'stream' })
+//       //     .toPromise();
+//       //   const filepath = join(destination, assets.image_name);
+//       //   const writeStream = createWriteStream(filepath);
+//       //   await data.pipe(writeStream);
+//       // });
+
+//       // const game = {
+//       //   game_name: gameTitle,
+//       //   img: 'https://i.ibb.co/CBXZLgt/astry.png',
+//       //   gameUrl,
+//       //   user_id,
+//       //   category: GameCategory.Generate,
+//       //   private: true,
+//       // };
+
+//       // const newGame = await this.generateService.createGame(game);
+//       return { status: 'success', data: 'test' };
+//       // return { status: 'success', data: newGame };
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   }
+
+
+
+
+// @UseGuards(FirebaseAuthGuard)
+  @Post()
+  @UseInterceptors(FileInterceptor('file'))
+  async generateNewGame(
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req,
+  ): Promise<ResponseType> {
+    try {
+      const user_id = req.user.user_id;
+      const url = await this.utilsService.uploadBufferPhotosForGenerateGame(
+        file,
+      );
+      const gameTitle = req.body.name;
+      const gameName = gameTitle || 'astray-5';
+      const data = await this.generateService.addGameToQueueForProcess({
+        game_title: gameTitle,
+        original_name: 'astray',
+        user_id,
+        img_url: url,
+      });
+
+      const { data } = await this.httpService
+        .post(`${process.env.IMG_PROCESS_API}/api`, { imgUrl: url })
+        .toPromise();
+      const { game_name, game_assets } = data.game_data_assets;
+
+      // console.log('Got API response and image assets');
+      // const new_game_id = `${uuidv4()}`;
+      // const gameSource = join(__dirname, '../..', 'public', game_name);
+      // const destination = join(__dirname, '../..', 'public', new_game_id);
+      // await fs.copy(gameSource, destination);
+
+      // console.log('copied game source in local directory');
+      // game_assets.forEach(async (assets: any) => {
+      //   const { data } = await this.httpService
+      //     .get(assets.image_file, { responseType: 'stream' })
+      //     .toPromise();
+      //   const filepath = join(destination, assets.image_name);
+      //   const writeStream = createWriteStream(filepath);
+      //   await data.pipe(writeStream);
+      // });
+
+      // console.log('generated new game with assets');
+      // const { game_url } = await this.utilsService.uploadGameToFirestore(
+      //   new_game_id,
+      // );
+
+      // console.log('uploaded new game in firestore');
+      // const userRef = getFirestore().doc(
+      //   `${FirebaseCollection.users}/${user_id}`,
+      // );
+
+      // const game = new Game(
+      //   gameName,
+      //   'https://i.ibb.co/CBXZLgt/astry.png',
+      //   game_url,
+      //   GameCategory.Generate,
+      //   userRef,
+      //   user_id,
+      // );
+      // const { id } = await this.generateService.insertNewGame(game);
+
+      // console.log('Inserted new game information in database');
+      // await fs.remove(destination);
+
+      // console.log('Removed local game');
+      // return { status: 'success', data: { ...game, id } };
+      return { status: 'success', data };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+
+
+  import { HttpService } from '@nestjs/axios';
+import { Processor, Process } from '@nestjs/bull';
+import { Job } from 'bull';
+import { UtilsService } from '../utils/utils.service';
+import { GenerateGame } from '../model/generate.dto';
+import * as fs from 'fs-extra';
+import { v4 as uuidv4 } from 'uuid';
+import { join } from 'path';
+import { createWriteStream } from 'fs';
+import { FirebaseCollection } from 'src/config/collection';
+import { getFirestore } from 'firebase-admin/firestore';
+import { GameCategory } from '../model/enums/gameCategory.enum';
+import { Game } from '../model/create-game.dto';
+import { OrmService } from '../orm/orm.service';
+
+@Processor('gameGenerate')
+export class GenerateGameConsumer {
+  constructor(
+    private httpService: HttpService,
+    private utilsService: UtilsService,
+    private ormService: OrmService,
+  ) {}
+  @Process()
+  async transcode(job: Job<GenerateGame>) {
+    await job.progress('Processing image');
+
+    const { game_title, img_url, original_name, user_id } = job.data;
+    const { data } = await this.httpService
+      .post(`${process.env.IMG_PROCESS_API}/api`, { imgUrl: img_url })
+      .toPromise();
+
+    await job.progress('Finding source');
+
+    const { game_name, game_assets } = data.game_data_assets;
+    const new_game_id = `${uuidv4()}`;
+    const gameSource = join(__dirname, '../..', 'public', game_name);
+    const destination = join(__dirname, '../..', 'public', new_game_id);
+    await fs.copy(gameSource, destination);
+
+    await job.progress('Downloading source');
+    for (const assets of game_assets) {
+      const { data } = await this.httpService
+        .get(assets.image_file, { responseType: 'stream' })
+        .toPromise();
+      const filepath = join(destination, assets.image_name);
+      const writeStream = createWriteStream(filepath);
+      await data.pipe(writeStream);
+    }
+
+    await job.progress('Storing Game source');
+
+    const { game_url } = await this.utilsService.uploadGameToFirestore(
+      new_game_id,
+    );
+    const userRef = getFirestore().doc(
+      `${FirebaseCollection.users}/${user_id}`,
+    );
+
+    const game = new Game(
+      game_title,
+      'https://i.ibb.co/CBXZLgt/astry.png',
+      game_url,
+      GameCategory.Generate,
+      userRef,
+      user_id,
+    );
+    await job.progress('Inserting new game');
+
+    const { id } = await this.ormService.insertDocument<Game>(
+      FirebaseCollection.games,
+      game,
+    );
+
+    await fs.remove(destination);
+
+    return await job.progress({
+      status: 'Task complected',
+      data: { ...game, id },
+    });
+  }
+}
+
+=======================================
+@UseGuards(FirebaseAuthGuard)
+  @Post()
+  @UseInterceptors(FileInterceptor('file'))
+  async generateNewGame(
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req,
+  ): Promise<ResponseType> {
+    const user_id = req.user.user_id;
+    // const user_id = '124538';
+    const gameTitle = req.body.name;
+    const game_assets = await this.generateService.getGameSourcFromApi(file);
+    const data = await this.generateService.addGameToQueueForProcess({
+      game_title: gameTitle,
+      user_id,
+      game_assets,
+    });
+
+    return { status: 'success', data };
+  }
+=======================================================================
+async getGameSourcFromApi(file: Express.Multer.File): Promise<GameAssets> {
+    try {
+      const formData = new FormData();
+      formData.append('image', file.buffer, { filename: file.originalname });
+      const { data } = await this.httpService
+        .post(`${process.env.IMG_PROCESS_API}`, formData, {
+          headers: {
+            ...formData.getHeaders(),
+            'Content-Length': formData.getLengthSync(),
+          },
+        })
+        .toPromise();
+      return data.game_data_assets;
+    } catch (error) {
+      console.log(error.massage);
+      throw new BadRequestException();
+    }
+  }
